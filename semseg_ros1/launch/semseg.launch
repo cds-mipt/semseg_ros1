@@ -1,0 +1,27 @@
+<launch>
+
+    <!-- Параметры модели -->
+    <arg name="weights" default="/home/docker_semseg/catkin_ws/src/semseg/weights/fcn_resnet50_coco-1167a1af.pth" />
+    <arg name="treshold" default="0.5" />
+
+    <!-- Настройка топиков -->
+    <arg name="camera_ns" default="/kitti/camera_color_left/" />
+    <arg name="image_topic" default="image_raw" />
+    <arg name="segmentation_topic" default="segmentation" />
+    <arg name="segmentation_color_topic" default="segmentation_color" />
+
+    <!-- Nodes -->
+    <group ns="$(arg camera_ns)">
+        <remap from="image" to="$(arg image_topic)" />
+        <remap from="segmentation" to="$(arg segmentation_topic)" />
+        <remap from="segmentation_color" to="$(arg segmentation_color_topic)" />
+
+        <node pkg="semseg_ros1" type="semseg_node.py" name="semseg_node" output="screen">
+            <param name="weights" value="$(arg weights)" />
+            <param name="treshold" value="$(arg treshold)" />
+        </node>
+
+        <node pkg="semseg_ros1" type="visualizer_node.py" name="visualizer_node" output="screen" />
+    </group>
+
+</launch>
