@@ -1,0 +1,56 @@
+FROM nvcr.io/nvidia/cuda:11.1.1-devel-ubuntu20.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install system dependencies for convinient development inside container
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    git \
+    tmux \
+    curl \
+    wget \
+    build-essential \
+    sudo \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Install PyTorch
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+
+# Install ROS1 Noetic
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        gnupg \
+        lsb-release \
+        curl && \
+    sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    apt-get update && apt-get install --no-install-recommends -y \
+        ros-noetic-ros-base \
+        ros-noetic-cv-bridge \
+        python3-rosdep \
+        python3-rosinstall \
+        python3-rosinstall-generator \
+        python3-wstool \
+        build-essential && \
+    rosdep init && \
+    rosdep update && \
+    rm -rf /var/lib/apt/lists/*
+
+
+RUN python3 -m pip install opencv-python
+
+# add user and his password
+ARG USER=docker_semseg
+ARG UID=1000
+ARG GID=1000
+# default password
+ARG PW=user
+
+ENV PYTHONPATH=/home/${USER}/catkin_ws/src/semseg:${PYTHONPATH}
+
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | chpasswd && adduser ${USER} sudo
+WORKDIR /home/${USER}
+RUN mkdir -p catkin_ws/src && chown -R ${UID}:${GID} /home/${USER}
+USER ${UID}:${GID}
