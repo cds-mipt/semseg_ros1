@@ -1,3 +1,5 @@
+Репозиторий содержит ROS1 интерфейс для библиотеки семантической сегментации semseg ([gitlab](https://gitlab.com/sdbcs-nio3/itl_mipt/segm_tracking/alg/2d_segmentation/semseg), [github](https://github.com/cds-mipt/semseg), хотя бы к одной версии должен быть доступ) и является частью примера интеграции нейросетевого модуля в ROS1.
+
 ## Создание рабочего пространства
 
 Официальные туториалы по созданию рабочего пространства в ROS1: 
@@ -12,8 +14,14 @@ mkdir ~/workspace/catkin_ws/src -p
 Далее можно склонировать исходный код необходимых пакетов:
 ```bash
 cd ~/workspace/catkin_ws/src
+
+# с gitlab
 git clone https://gitlab.com/sdbcs-nio3/itl_mipt/segm_tracking/alg/2d_segmentation/semseg.git
 git clone https://gitlab.com/sdbcs-nio3/itl_mipt/segm_tracking/alg/2d_segmentation/semseg_ros1.git
+
+# или, если нет доступа к gitlab, с github
+git clone git@github.com:cds-mipt/semseg.git
+git clone git@github.com:cds-mipt/semseg_ros1.git
 ```
 
 
