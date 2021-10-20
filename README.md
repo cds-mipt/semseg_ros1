@@ -122,7 +122,7 @@ launch файл сконфигурирован для запуска на дат
 Для запуска проигрывания нужно сначала активировать окружение ROS1:
 ```bash
 source /opt/ros/noetic/setup.bash
-ros2 bag play --clock kitti_2011_10_03_drive_0027_synced.bag
+rosbag play --clock --pause -r 1 kitti_2011_10_03_drive_0027_synced.bag
 ```
 Визуализировать результаты работы можно либо с помощью rqt
 ```bash
